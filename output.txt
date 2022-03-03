@@ -1,0 +1,154 @@
+BINANCE_SPOT_ETH_USDT Current Price is: 2951.715
+Get Keys Completed
+-------------
+Calculate Here
+0 resC1 False
+0 resC2 False
+0 supC1 False
+0 supC2 True
+unsuccess_five_min reset: 0
+0 unsuccess
+1 resC1 False
+1 resC2 False
+1 supC1 False
+1 supC2 True
+unsuccess_five_min reset: 0
+1 unsuccess
+2 resC1 False
+2 resC2 False
+2 supC1 False
+2 supC2 True
+unsuccess_five_min reset: 0
+2 unsuccess
+3 resC1 False
+3 resC2 False
+3 supC1 False
+3 supC2 True
+unsuccess_five_min reset: 0
+3 unsuccess
+4 resC1 False
+4 resC2 False
+4 supC1 False
+4 supC2 True
+unsuccess_five_min reset: 0
+4 unsuccess
+5 resC1 False
+5 resC2 False
+5 supC1 False
+5 supC2 True
+unsuccess_five_min reset: 0
+5 unsuccess
+6 resC1 False
+6 resC2 False
+6 supC1 False
+6 supC2 True
+unsuccess_five_min reset: 0
+6 unsuccess
+7 resC1 False
+7 resC2 False
+7 supC1 False
+7 supC2 True
+unsuccess_five_min reset: 0
+7 unsuccess
+8 resC1 False
+8 resC2 False
+8 supC1 False
+8 supC2 True
+unsuccess_five_min reset: 0
+8 unsuccess
+9 resC1 False
+9 resC2 False
+9 supC1 False
+9 supC2 True
+unsuccess_five_min reset: 0
+9 unsuccess
+10 resC1 False
+10 resC2 False
+10 supC1 False
+10 supC2 True
+unsuccess_five_min reset: 0
+10 unsuccess
+11 resC1 False
+11 resC2 True
+11 supC1 True
+11 supC2 False
+black_x_five_min count: 0
+BlackXsup
+11 success Sup1
+2905.69 open > 2899.5885000000003 MA 2895.2 low <= 2899.5885000000003 MA
+11 unsuccess Res2
+2897.45 close < 2899.5885000000003 MA
+12 resC1 False
+12 resC2 True
+12 supC1 False
+12 supC2 False
+unsuccess_five_min reset: 0
+12 unsuccess
+13 resC1 False
+13 resC2 True
+13 supC1 False
+13 supC2 False
+unsuccess_five_min reset: 0
+13 unsuccess
+14 resC1 True
+14 resC2 True
+14 supC1 False
+14 supC2 False
+success_five_min count: 1
+RES SUCCESS
+14 success Res1
+2892.23 open < 2903.223 MA 2903.72 high >= 2903.223 MA
+14 success Res2
+2903.08 close <= 2903.223 MA
+15 resC1 True
+15 resC2 False
+15 supC1 False
+15 supC2 True
+black_x_five_min count: 1
+BlackXres
+15 success Res1
+2903.08 open < 2904.4515 MA 2909.74 high >= 2904.4515 MA
+15 unsuccess Res2
+2906.57 close > 2904.4515 MA
+16 resC1 False
+16 resC2 False
+16 supC1 True
+16 supC2 True
+success_five_min count: 2
+SUP SUCCESS
+16 success Sup1
+2906.57 open > 2905.909 MA 2899.39 low <= 2905.909 MA
+16 success Sup2
+2905.93 close >= 2905.909 MA
+17 resC1 True
+17 resC2 False
+17 supC1 False
+17 supC2 True
+black_x_five_min count: 2
+BlackXres
+17 success Res1
+2905.93 open < 2907.228 MA 2920.46 high >= 2907.228 MA
+17 unsuccess Res2
+2914.09 close > 2907.228 MA
+18 resC1 False
+18 resC2 False
+18 supC1 False
+18 supC2 True
+unsuccess_five_min count: 1
+18 unsuccess
+19 resC1 False
+19 resC2 False
+19 supC1 False
+19 supC2 True
+unsuccess_five_min count: 2
+19 unsuccess
+Prelim calculations:
+ Black X: 2
+ Success: 2
+ Unsuccess: 2
+-------------
+Final calculations:
+ Black X: 0
+ Success: 0
+ Unsuccess: 0
+-------------
