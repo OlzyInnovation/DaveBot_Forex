@@ -11,8 +11,8 @@ symbols: list[str] = ['BINANCE_SPOT_ETH_USDT']
 #symbols: list[str] = ['BINANCE_SPOT_MATIC_USDT','BINANCE_SPOT_LUNA_USDT', 'BINANCE_SPOT_ETH_USDT', 'BINANCE_SPOT_ADA_USDT', 'BINANCE_SPOT_SOL_USDT', 'BINANCE_SPOT_CRV_USDT','BINANCE_SPOT_BTC_USDT' ]
 
 # Sample periods
-# periods: list[str] = ['5MIN', '15MIN', '1HRS', '4HRS', '1DAY']
-periods: list[str] = ['5MIN', '15MIN']
+periods: list[str] = ['5MIN', '15MIN', '1HRS', '4HRS', '1DAY']
+# periods: list[str] = ['5MIN', '15MIN']
 
 # Calculate time for period time lapse
 t = time.localtime()
@@ -74,39 +74,25 @@ one_day_close = []
 one_day_high = []
 one_day_low = []
 
-# Resistance running counts
-black_x_resistance_running_count_five_min: int = 0
-black_x_resistance_running_count_fifteen_min: int = 0
-black_x_resistance_running_count_one_hr: int = 0
-black_x_resistance_running_count_four_hrs: int = 0
-black_x_resistance_running_count_one_day: int = 0
-
-# Support running counts
-black_x_support_running_count_five_min: int = 0
-black_x_support_running_count_fifteen_min: int = 0
-black_x_support_running_count_one_hr: int = 0
-black_x_support_running_count_four_hrs: int = 0
-black_x_support_running_count_one_day: int = 0
-
 # Success
 success_five_min = 0
-success_fifteen_min: list[int] = []
-success_one_hr: list[int] = []
-success_four_hrs: list[int] = []
-success_one_day: list[int] = []
+success_fifteen_min = 0
+success_one_hr = 0
+success_four_hrs = 0
+success_one_day = 0
 
 # Unuccess
 unsuccess_five_min = 0
-unsuccess_fifteen_min: list[int] = []
-unsuccess_one_hr: list[int] = []
-unsuccess_four_hrs: list[int] = []
-unsuccess_one_day: list[int] = []
+unsuccess_fifteen_min = 0
+unsuccess_one_hr = 0
+unsuccess_four_hrs = 0
+unsuccess_one_day = 0
 
 black_x_five_min = 0
-black_x_fifteen_minutes: list[int] = []
-black_x_one_hour: list[int] = []
-black_x_four_hours: list[int] = []
-black_x_one_day: list[int] = []
+black_x_fifteen_minutes = 0
+black_x_one_hour = 0
+black_x_four_hours = 0
+black_x_one_day = 0
 
 
 def get_current_price(symbol: str) -> float:
@@ -153,7 +139,7 @@ def calculate_ma(total: float, period: str):
         one_day_moving_average.append(moving_average)
         
 
-
+# Based on period, sorts the periods' close data and calls the 'calculate_ma' function
 def new_function(param: list, period: str):
     global five_minutes_moving_average
     global fifteen_minutes_moving_average
@@ -163,27 +149,61 @@ def new_function(param: list, period: str):
 
     counter = 0
     if period == '5MIN':
-        for i in range(0, len(five_min_close)):
+        for i in range(0, len(param)):
             if counter == 20:
                 continue
             else:
                 total = 0
-                split_list = five_min_close[counter:counter + 20]
+                split_list = param[counter:counter + 20]
                 for i in range(0, len(split_list)):
                     total += float(split_list[i])
                 counter += 1
                 calculate_ma(total, period)
     if period == '15MIN':
-        for i in range(0, len(fifteen_min_close)):
+        for i in range(0, len(param)):
             if counter == 20:
                 continue
             else:
                 total = 0
-                split_list = fifteen_min_close[counter:counter + 20]
+                split_list = param[counter:counter + 20]
                 for i in range(0, len(split_list)):
                     total += float(split_list[i])
                 counter += 1
                 calculate_ma(total, period)
+    if period == '1HRS':
+        for i in range(0, len(param)):
+            if counter == 20:
+                continue
+            else:
+                total = 0
+                split_list = param[counter:counter + 20]
+                for i in range(0, len(split_list)):
+                    total += float(split_list[i])
+                counter += 1
+                calculate_ma(total, period)
+    if period == '4HRS':
+        for i in range(0, len(param)):
+            if counter == 20:
+                continue
+            else:
+                total = 0
+                split_list = param[counter:counter + 20]
+                for i in range(0, len(split_list)):
+                    total += float(split_list[i])
+                counter += 1
+                calculate_ma(total, period)
+    if period == '1DAY':
+        for i in range(0, len(param)):
+            if counter == 20:
+                continue
+            else:
+                total = 0
+                split_list = param[counter:counter + 20]
+                for i in range(0, len(split_list)):
+                    total += float(split_list[i])
+                counter += 1
+                calculate_ma(total, period)
+    
                 
 
         # with open('list_confirmation.json', 'w+') as f:
@@ -212,6 +232,8 @@ def create_json(period: str, param: list):
     final.close()
 
 
+# Based on period, opens the periods' json data, sorts it and creates new json OHLC files
+# On new OHLC json files creation, also based on period, calls the 'new_function' function
 def get_keys(period: str):
     global five_minutes_moving_average
     global fifteen_minutes_moving_average
@@ -302,13 +324,35 @@ def get_keys(period: str):
             f.write(str(fifteen_min_low))
         new_function(fifteen_min_close, period)
     elif period == '1HRS':
+        with open(f'{period}_close.json', 'w+') as f:
+            f.write(str(one_hour_close))
+        with open(f'{period}_open.json', 'w+') as f:
+            f.write(str(one_hour_open))
+        with open(f'{period}_high.json', 'w+') as f:
+            f.write(str(one_hour_high))
+        with open(f'{period}_low.json', 'w+') as f:
+            f.write(str(one_hour_low))
         new_function(one_hour_close, period)
     elif period == '4HRS':
+        with open(f'{period}_close.json', 'w+') as f:
+            f.write(str(four_hours_close))
+        with open(f'{period}_open.json', 'w+') as f:
+            f.write(str(four_hours_open))
+        with open(f'{period}_high.json', 'w+') as f:
+            f.write(str(four_hours_high))
+        with open(f'{period}_low.json', 'w+') as f:
+            f.write(str(four_hours_low))
         new_function(four_hours_close, period)
     elif period == '1DAY':
+        with open(f'{period}_close.json', 'w+') as f:
+            f.write(str(one_day_close))
+        with open(f'{period}_open.json', 'w+') as f:
+            f.write(str(one_day_open))
+        with open(f'{period}_high.json', 'w+') as f:
+            f.write(str(one_day_high))
+        with open(f'{period}_low.json', 'w+') as f:
+            f.write(str(one_day_low))
         new_function(one_day_close, period)
-    
-
 
     print("Get Keys Completed")
     print("-------------")
@@ -331,28 +375,26 @@ def period_api_request(symbol: str, period: str):
 def confirm_period_delay():
     print('Confirm delay period here')
     try:
-        sleep_time = 300
+        sleep_time = 3
         # Five Minute Sleep Time
         time.sleep(sleep_time)
         for symbol in symbols:
             get_current_price(symbol)
             for period in periods:
                 if period == '5MIN' and (str(five_minutes - now) <= str(now)):
-                    get_keys(period)
-                    calculate(period, symbol)
+                    period_api_request(symbol, period)
                 
-                # if period == '15MIN' and (str(fifteen_minutes - now) <= str(now)):
-                #     # # if now >= fifteen_minutes and period == '15MIN':
-                #     period_api_request(symbol, period)
+                if period == '15MIN' and (str(fifteen_minutes - now) <= str(now)):
+                        period_api_request(symbol, period)
                 
-                # if period == '1HRS' and (str(one_hour - now) <= str(now)):
-                #     period_api_request(symbol, period)
+                if period == '1HRS' and (str(one_hour - now) <= str(now)):
+                        period_api_request(symbol, period)
                 
-                # if period == '4HRS' and (str(four_hours - now) <= str(now)):
-                #     period_api_request(symbol, period)
+                if period == '4HRS' and (str(four_hours - now) <= str(now)):
+                        period_api_request(symbol, period)
                
-                # if period == '1DAY' and (str(one_day - now) <= str(now)):
-                #     period_api_request(symbol, period)
+                if period == '1DAY' and (str(one_day - now) <= str(now)):
+                        period_api_request(symbol, period)
                 
         confirm_period_delay()
     except Exception:
@@ -370,7 +412,7 @@ def get_periods() -> None:
             for period in periods:
                 period_api_request(symbol, period)
 
-        # confirm_period_delay()
+        confirm_period_delay()
 
     except Exception:
         print('Get Periods Exception')
@@ -381,13 +423,6 @@ def get_periods() -> None:
 def calculate(period: str, symbol: str) -> None:
     print('Calculate Here')
     total_range = 20
-
-    global black_x_resistance_running_count_five_min
-    global black_x_resistance_running_count_fifteen_min
-    global black_x_resistance_running_count_one_hr
-    global black_x_resistance_running_count_four_hrs
-    global black_x_resistance_running_count_one_day
-    global black_x_support_running_count_five_min
 
     global success_five_min
     global success_fifteen_min
@@ -406,7 +441,7 @@ def calculate(period: str, symbol: str) -> None:
     global black_x_one_hour
     global black_x_four_hours
     global black_x_one_day
-
+    
     
     try:
         if period == '5MIN':
@@ -523,6 +558,469 @@ def calculate(period: str, symbol: str) -> None:
                         success_five_min = 0
                         unsuccess_five_min = 0
                         print(f'Final calculations: \n Black X: {black_x_five_min} \n Success: {success_five_min} \n Unsuccess: {unsuccess_five_min}')
+                        print("-------------")
+        if period == '15MIN':
+            global fifteen_minutes_moving_average
+            open_list = fifteen_min_open[:total_range]
+            high_list = fifteen_min_high[:total_range]
+            low_list = fifteen_min_low[:total_range]
+            close_list = fifteen_min_close[:total_range]
+          
+            # print(f'Origin - This is successful: {successful} and this is unsuccessful: {unsuccessful}')
+
+            for i in range(0, total_range):
+
+                # If open < MA and high > MA
+                res_cond1 = open_list[-i] < fifteen_minutes_moving_average[-i] and high_list[-i] >= fifteen_minutes_moving_average[-i]
+                print(str(i) + ' resC1 ' + str(res_cond1))
+                # If close < MA
+                res_cond2 = close_list[-i] <= fifteen_minutes_moving_average[-i]
+                print(str(i) + ' resC2 ' + str(res_cond2))
+
+                sup_cond1 = open_list[-i] > fifteen_minutes_moving_average[-i] and low_list[-i] <= fifteen_minutes_moving_average[-i]
+                print(str(i) + ' supC1 ' + str(sup_cond1))
+                sup_cond2 = close_list[-i] >= fifteen_minutes_moving_average[-i]
+                print(str(i) + ' supC2 ' + str(sup_cond2))                
+
+                if not res_cond1 and not sup_cond1:
+                    # Added
+                    if success_fifteen_min > 0:
+                        unsuccess_fifteen_min += 1
+                        print(f'unsuccess_fifteen_min count: {unsuccess_fifteen_min}')
+                    else:
+                        unsuccess_fifteen_min = 0
+                        print(f'unsuccess_fifteen_min reset: {unsuccess_fifteen_min}')
+                    print(str(i) + ' unsuccess')
+                else:
+                    # Is Resistance
+                    if res_cond1:
+                        if res_cond2:
+                            # Added
+
+                            success_fifteen_min += 1
+                            print(f'success_fifteen_min count: {success_fifteen_min}')
+                            print('RES SUCCESS')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(fifteen_minutes_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(fifteen_minutes_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Res2')
+                            print(str(close_list[-i]) + ' close <= ' + str(fifteen_minutes_moving_average[-i]) + ' MA')
+                        else:
+                            # If res_cond1 TRUE and res_cond2 FALSE
+                            # Added
+                            if success_fifteen_min > 0:
+                                black_x_fifteen_minutes += 1
+                                print(f'black_x_fifteen_minutes count: {black_x_fifteen_minutes}')
+                            else:
+                                black_x_fifteen_minutes = 0
+                            print('BlackXres ')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(fifteen_minutes_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(fifteen_minutes_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close > ' + str(fifteen_minutes_moving_average[-i]) + ' MA')
+	            
+                    # Is Support
+                    if sup_cond1:
+                        if sup_cond2:
+                            # Added
+                            success_fifteen_min += 1
+                            print(f'success_fifteen_min count: {success_fifteen_min}')
+                            print('SUP SUCCESS')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(fifteen_minutes_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(fifteen_minutes_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Sup2')
+                            print(str(close_list[-i]) + ' close >= ' + str(fifteen_minutes_moving_average[-i]) + ' MA')
+
+                        else:
+                            # If sup_cond1 TRUE and sup_cond2 FALSE
+                            # Added
+                            if success_fifteen_min > 0:
+                                black_x_fifteen_minutes += 1
+                                print(f'black_x_fifteen_minutes count: {black_x_fifteen_minutes}')
+                            else:
+                                black_x_fifteen_minutes = 0
+                                print(f'black_x_fifteen_minutes count: {black_x_fifteen_minutes}')
+                            print('BlackXsup')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(fifteen_minutes_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(fifteen_minutes_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close < ' + str(fifteen_minutes_moving_average[-i]) + ' MA')
+                print(f'Prelim calculations: \n Black X: {black_x_fifteen_minutes} \n Success: {success_fifteen_min} \n Unsuccess: {unsuccess_fifteen_min}')
+                print(f'success_fifteen_min running count: {success_fifteen_min}')
+                print(f'unsuccess_fifteen_min running count: {unsuccess_fifteen_min}')
+                print(f'black_x_fifteen_minutes running count: {black_x_fifteen_minutes}')
+                print("-------------")
+
+                # print(f'Successful is {success_fifteen_min} and Unsuccessful is {unsuccess_fifteen_min}')
+
+                try:
+                    final_sum = black_x_fifteen_minutes / success_fifteen_min
+                    print(f'Current blackX/success division is {final_sum}')
+                    if final_sum >= 0.5:
+                        black_x_fifteen_minutes = 0
+                        success_fifteen_min = 0
+                        unsuccess_fifteen_min = 0
+                        print(f'Final calculations: \n Black X: {black_x_fifteen_minutes} \n Success: {success_fifteen_min} \n Unsuccess: {unsuccess_fifteen_min}')
+                        print("-------------")
+                    if unsuccess_fifteen_min == 20:
+                        black_x_fifteen_minutes = 0
+                        success_fifteen_min = 0
+                        unsuccess_fifteen_min = 0
+                        print(f'Force reset all parameters as unsuccess_fifteen_min == {unsuccess_fifteen_min}')
+                        print("-------------")
+                except ZeroDivisionError:
+                        print(f'Current blackX/success division got a zero division')
+                        black_x_fifteen_minutes = 0
+                        success_fifteen_min = 0
+                        unsuccess_fifteen_min = 0
+                        print(f'Final calculations: \n Black X: {black_x_fifteen_minutes} \n Success: {success_fifteen_min} \n Unsuccess: {unsuccess_fifteen_min}')
+                        print("-------------")
+        if period == '1HRS':
+            global one_hour_moving_average
+            open_list = one_hour_open[:total_range]
+            high_list = one_hour_high[:total_range]
+            low_list = one_hour_low[:total_range]
+            close_list = one_hour_close[:total_range]
+          
+            # print(f'Origin - This is successful: {successful} and this is unsuccessful: {unsuccessful}')
+
+            for i in range(0, total_range):
+
+                # If open < MA and high > MA
+                res_cond1 = open_list[-i] < one_hour_moving_average[-i] and high_list[-i] >= one_hour_moving_average[-i]
+                print(str(i) + ' resC1 ' + str(res_cond1))
+                # If close < MA
+                res_cond2 = close_list[-i] <= one_hour_moving_average[-i]
+                print(str(i) + ' resC2 ' + str(res_cond2))
+
+                sup_cond1 = open_list[-i] > one_hour_moving_average[-i] and low_list[-i] <= one_hour_moving_average[-i]
+                print(str(i) + ' supC1 ' + str(sup_cond1))
+                sup_cond2 = close_list[-i] >= one_hour_moving_average[-i]
+                print(str(i) + ' supC2 ' + str(sup_cond2))
+                
+
+                if not res_cond1 and not sup_cond1:
+                    # Added
+                    if success_one_hr > 0:
+                        unsuccess_one_hr += 1
+                        print(f'unsuccess_one_hr count: {unsuccess_one_hr}')
+                    else:
+                        unsuccess_one_hr = 0
+                        print(f'unsuccess_one_hr reset: {unsuccess_one_hr}')
+                    print(str(i) + ' unsuccess')
+                else:
+                    # Is Resistance
+                    if res_cond1:
+                        if res_cond2:
+                            # Added
+
+                            success_one_hr += 1
+                            print(f'success_one_hr count: {success_one_hr}')
+                            print('RES SUCCESS')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(one_hour_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(one_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Res2')
+                            print(str(close_list[-i]) + ' close <= ' + str(one_hour_moving_average[-i]) + ' MA')
+                        else:
+                            # If res_cond1 TRUE and res_cond2 FALSE
+                            # Added
+                            if success_one_hr > 0:
+                                black_x_one_hour += 1
+                                print(f'black_x_one_hour count: {black_x_one_hour}')
+                            else:
+                                black_x_one_hour = 0
+                            print('BlackXres ')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(one_hour_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(one_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close > ' + str(one_hour_moving_average[-i]) + ' MA')
+	            
+                    # Is Support
+                    if sup_cond1:
+                        if sup_cond2:
+                            # Added
+                            success_one_hr += 1
+                            print(f'success_one_hr count: {success_one_hr}')
+                            print('SUP SUCCESS')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(one_hour_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(one_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Sup2')
+                            print(str(close_list[-i]) + ' close >= ' + str(one_hour_moving_average[-i]) + ' MA')
+
+                        else:
+                            # If sup_cond1 TRUE and sup_cond2 FALSE
+                            # Added
+                            if success_one_hr > 0:
+                                black_x_one_hour += 1
+                                print(f'black_x_one_hour count: {black_x_one_hour}')
+                            else:
+                                black_x_one_hour = 0
+                                print(f'black_x_one_hour count: {black_x_one_hour}')
+                            print('BlackXsup')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(one_hour_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(one_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close < ' + str(one_hour_moving_average[-i]) + ' MA')
+                print(f'Prelim calculations: \n Black X: {black_x_one_hour} \n Success: {success_one_hr} \n Unsuccess: {unsuccess_one_hr}')
+                print(f'success_one_hr running count: {success_one_hr}')
+                print(f'unsuccess_one_hr running count: {unsuccess_one_hr}')
+                print(f'black_x_one_hour running count: {black_x_one_hour}')
+                print("-------------")
+
+                # print(f'Successful is {success_one_hr} and Unsuccessful is {unsuccess_one_hr}')
+
+                try:
+                    final_sum = black_x_one_hour / success_one_hr
+                    print(f'Current blackX/success division is {final_sum}')
+                    if final_sum >= 0.5:
+                        black_x_one_hour = 0
+                        success_one_hr = 0
+                        unsuccess_one_hr = 0
+                        print(f'Final calculations: \n Black X: {black_x_one_hour} \n Success: {success_one_hr} \n Unsuccess: {unsuccess_one_hr}')
+                        print("-------------")
+                    if unsuccess_one_hr == 20:
+                        black_x_one_hour = 0
+                        success_one_hr = 0
+                        unsuccess_one_hr = 0
+                        print(f'Force reset all parameters as unsuccess_one_hr == {unsuccess_one_hr}')
+                        print("-------------")
+                except ZeroDivisionError:
+                        print(f'Current blackX/success division got a zero division')
+                        black_x_one_hour = 0
+                        success_one_hr = 0
+                        unsuccess_one_hr = 0
+                        print(f'Final calculations: \n Black X: {black_x_one_hour} \n Success: {success_one_hr} \n Unsuccess: {unsuccess_one_hr}')
+                        print("-------------")
+        if period == '4HRS':
+            global four_hour_moving_average
+            open_list = four_hours_open[:total_range]
+            high_list = four_hours_high[:total_range]
+            low_list = four_hours_low[:total_range]
+            close_list = four_hours_close[:total_range]
+          
+            # print(f'Origin - This is successful: {successful} and this is unsuccessful: {unsuccessful}')
+
+            for i in range(0, total_range):
+
+                # If open < MA and high > MA
+                res_cond1 = open_list[-i] < four_hour_moving_average[-i] and high_list[-i] >= four_hour_moving_average[-i]
+                print(str(i) + ' resC1 ' + str(res_cond1))
+                # If close < MA
+                res_cond2 = close_list[-i] <= four_hour_moving_average[-i]
+                print(str(i) + ' resC2 ' + str(res_cond2))
+
+                sup_cond1 = open_list[-i] > four_hour_moving_average[-i] and low_list[-i] <= four_hour_moving_average[-i]
+                print(str(i) + ' supC1 ' + str(sup_cond1))
+                sup_cond2 = close_list[-i] >= four_hour_moving_average[-i]
+                print(str(i) + ' supC2 ' + str(sup_cond2))
+                
+
+                if not res_cond1 and not sup_cond1:
+                    # Added
+                    if success_four_hrs > 0:
+                        unsuccess_four_hrs += 1
+                        print(f'unsuccess_four_hrs count: {unsuccess_four_hrs}')
+                    else:
+                        unsuccess_four_hrs = 0
+                        print(f'unsuccess_four_hrs reset: {unsuccess_four_hrs}')
+                    print(str(i) + ' unsuccess')
+                else:
+                    # Is Resistance
+                    if res_cond1:
+                        if res_cond2:
+                            # Added
+
+                            success_four_hrs += 1
+                            print(f'success_four_hrs count: {success_four_hrs}')
+                            print('RES SUCCESS')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(four_hour_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(four_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Res2')
+                            print(str(close_list[-i]) + ' close <= ' + str(four_hour_moving_average[-i]) + ' MA')
+                        else:
+                            # If res_cond1 TRUE and res_cond2 FALSE
+                            # Added
+                            if success_four_hrs > 0:
+                                black_x_four_hours += 1
+                                print(f'black_x_four_hours count: {black_x_four_hours}')
+                            else:
+                                black_x_four_hours = 0
+                            print('BlackXres ')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(four_hour_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(four_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close > ' + str(four_hour_moving_average[-i]) + ' MA')
+	            
+                    # Is Support
+                    if sup_cond1:
+                        if sup_cond2:
+                            # Added
+                            success_four_hrs += 1
+                            print(f'success_four_hrs count: {success_four_hrs}')
+                            print('SUP SUCCESS')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(four_hour_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(four_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Sup2')
+                            print(str(close_list[-i]) + ' close >= ' + str(four_hour_moving_average[-i]) + ' MA')
+
+                        else:
+                            # If sup_cond1 TRUE and sup_cond2 FALSE
+                            # Added
+                            if success_four_hrs > 0:
+                                black_x_four_hours += 1
+                                print(f'black_x_four_hours count: {black_x_four_hours}')
+                            else:
+                                black_x_four_hours = 0
+                                print(f'black_x_four_hours count: {black_x_four_hours}')
+                            print('BlackXsup')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(four_hour_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(four_hour_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close < ' + str(four_hour_moving_average[-i]) + ' MA')
+                print(f'Prelim calculations: \n Black X: {black_x_four_hours} \n Success: {success_four_hrs} \n Unsuccess: {unsuccess_four_hrs}')
+                print(f'success_four_hrs running count: {success_four_hrs}')
+                print(f'unsuccess_four_hrs running count: {unsuccess_four_hrs}')
+                print(f'black_x_four_hours running count: {black_x_four_hours}')
+                print("-------------")
+
+                # print(f'Successful is {success_four_hrs} and Unsuccessful is {unsuccess_four_hrs}')
+
+                try:
+                    final_sum = black_x_four_hours / success_four_hrs
+                    print(f'Current blackX/success division is {final_sum}')
+                    if final_sum >= 0.5:
+                        black_x_four_hours = 0
+                        success_four_hrs = 0
+                        unsuccess_four_hrs = 0
+                        print(f'Final calculations: \n Black X: {black_x_four_hours} \n Success: {success_four_hrs} \n Unsuccess: {unsuccess_four_hrs}')
+                        print("-------------")
+                    if unsuccess_four_hrs == 20:
+                        black_x_four_hours = 0
+                        success_four_hrs = 0
+                        unsuccess_four_hrs = 0
+                        print(f'Force reset all parameters as unsuccess_four_hrs == {unsuccess_four_hrs}')
+                        print("-------------")
+                except ZeroDivisionError:
+                        print(f'Current blackX/success division got a zero division')
+                        black_x_four_hours = 0
+                        success_four_hrs = 0
+                        unsuccess_four_hrs = 0
+                        print(f'Final calculations: \n Black X: {black_x_four_hours} \n Success: {success_four_hrs} \n Unsuccess: {unsuccess_four_hrs}')
+                        print("-------------")
+        if period == '1DAY':
+            global one_day_moving_average
+            open_list = one_day_open[:total_range]
+            high_list = one_day_high[:total_range]
+            low_list = one_day_low[:total_range]
+            close_list = one_day_close[:total_range]
+          
+            # print(f'Origin - This is successful: {successful} and this is unsuccessful: {unsuccessful}')
+
+            for i in range(0, total_range):
+
+                # If open < MA and high > MA
+                res_cond1 = open_list[-i] < one_day_moving_average[-i] and high_list[-i] >= one_day_moving_average[-i]
+                print(str(i) + ' resC1 ' + str(res_cond1))
+                # If close < MA
+                res_cond2 = close_list[-i] <= one_day_moving_average[-i]
+                print(str(i) + ' resC2 ' + str(res_cond2))
+
+                sup_cond1 = open_list[-i] > one_day_moving_average[-i] and low_list[-i] <= one_day_moving_average[-i]
+                print(str(i) + ' supC1 ' + str(sup_cond1))
+                sup_cond2 = close_list[-i] >= one_day_moving_average[-i]
+                print(str(i) + ' supC2 ' + str(sup_cond2))
+                
+
+                if not res_cond1 and not sup_cond1:
+                    # Added
+                    if success_one_day > 0:
+                        unsuccess_one_day += 1
+                        print(f'unsuccess_one_day count: {unsuccess_one_day}')
+                    else:
+                        unsuccess_one_day = 0
+                        print(f'unsuccess_one_day reset: {unsuccess_one_day}')
+                    print(str(i) + ' unsuccess')
+                else:
+                    # Is Resistance
+                    if res_cond1:
+                        if res_cond2:
+                            # Added
+
+                            success_one_day += 1
+                            print(f'success_one_day count: {success_one_day}')
+                            print('RES SUCCESS')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(one_day_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(one_day_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Res2')
+                            print(str(close_list[-i]) + ' close <= ' + str(one_day_moving_average[-i]) + ' MA')
+                        else:
+                            # If res_cond1 TRUE and res_cond2 FALSE
+                            # Added
+                            if success_one_day > 0:
+                                black_x_one_day += 1
+                                print(f'black_x_one_day count: {black_x_one_day}')
+                            else:
+                                black_x_one_day = 0
+                            print('BlackXres ')
+                            print(str(i) + ' success Res1')
+                            print(str(open_list[-i]) + ' open < ' + str(one_day_moving_average[-i]) + ' MA ' + str(high_list[-i]) + ' high >= ' + str(one_day_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close > ' + str(one_day_moving_average[-i]) + ' MA')
+	            
+                    # Is Support
+                    if sup_cond1:
+                        if sup_cond2:
+                            # Added
+                            success_one_day += 1
+                            print(f'success_one_day count: {success_one_day}')
+                            print('SUP SUCCESS')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(one_day_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(one_day_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' success Sup2')
+                            print(str(close_list[-i]) + ' close >= ' + str(one_day_moving_average[-i]) + ' MA')
+
+                        else:
+                            # If sup_cond1 TRUE and sup_cond2 FALSE
+                            # Added
+                            if success_one_day > 0:
+                                black_x_one_day += 1
+                                print(f'black_x_one_day count: {black_x_one_day}')
+                            else:
+                                black_x_one_day = 0
+                                print(f'black_x_one_day count: {black_x_one_day}')
+                            print('BlackXsup')
+                            print(str(i) + ' success Sup1')
+                            print(str(open_list[-i]) + ' open > ' + str(one_day_moving_average[-i]) + ' MA ' + str(low_list[-i]) + ' low <= ' + str(one_day_moving_average[-i]) + ' MA ')
+                            print(str(i) + ' unsuccess Res2')
+                            print(str(close_list[-i]) + ' close < ' + str(one_day_moving_average[-i]) + ' MA')
+                print(f'Prelim calculations: \n Black X: {black_x_one_day} \n Success: {success_one_day} \n Unsuccess: {unsuccess_one_day}')
+                print(f'success_one_day running count: {success_one_day}')
+                print(f'unsuccess_one_day running count: {unsuccess_one_day}')
+                print(f'black_x_one_day running count: {black_x_one_day}')
+                print("-------------")
+
+                # print(f'Successful is {success_one_day} and Unsuccessful is {unsuccess_one_day}')
+
+                try:
+                    final_sum = black_x_one_day / success_one_day
+                    print(f'Current blackX/success division is {final_sum}')
+                    if final_sum >= 0.5:
+                        black_x_one_day = 0
+                        success_one_day = 0
+                        unsuccess_one_day = 0
+                        print(f'Final calculations: \n Black X: {black_x_one_day} \n Success: {success_one_day} \n Unsuccess: {unsuccess_one_day}')
+                        print("-------------")
+                    if unsuccess_one_day == 20:
+                        black_x_one_day = 0
+                        success_one_day = 0
+                        unsuccess_one_day = 0
+                        print(f'Force reset all parameters as unsuccess_one_day == {unsuccess_one_day}')
+                        print("-------------")
+                except ZeroDivisionError:
+                        print(f'Current blackX/success division got a zero division')
+                        black_x_one_day = 0
+                        success_one_day = 0
+                        unsuccess_one_day = 0
+                        print(f'Final calculations: \n Black X: {black_x_one_day} \n Success: {success_one_day} \n Unsuccess: {unsuccess_one_day}')
                         print("-------------")
     except Exception:
         print('Calculate Exception')
