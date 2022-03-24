@@ -1,4 +1,3 @@
-from tkinter import N
 import requests
 import json
 import time
@@ -481,8 +480,11 @@ def calculate(period: str, symbol: str) -> None:
                     if res_cond1:
                         if res_cond2:
                             # Added
-
-                            success_five_min += 1
+                            if unsuccess_five_min > 0:
+                                unsuccess_five_min = 0
+                                success_five_min += 1
+                            else:
+                                unsuccess_five_min += 1
                             print(f'success_five_min count: {success_five_min}')
                             print('RES SUCCESS')
                             print(str(i) + ' success Res1')
@@ -507,7 +509,11 @@ def calculate(period: str, symbol: str) -> None:
                     if sup_cond1:
                         if sup_cond2:
                             # Added
-                            success_five_min += 1
+                            if unsuccess_five_min > 0:
+                                unsuccess_five_min = 0
+                                success_five_min += 1
+                            else:
+                                unsuccess_five_min += 1
                             print(f'success_five_min count: {success_five_min}')
                             print('SUP SUCCESS')
                             print(str(i) + ' success Sup1')
@@ -597,7 +603,11 @@ def calculate(period: str, symbol: str) -> None:
                         if res_cond2:
                             # Added
 
-                            success_fifteen_min += 1
+                            if unsuccess_fifteen_min > 0:
+                                unsuccess_fifteen_min = 0
+                                success_fifteen_min += 1
+                            else:
+                                unsuccess_fifteen_min += 1
                             print(f'success_fifteen_min count: {success_fifteen_min}')
                             print('RES SUCCESS')
                             print(str(i) + ' success Res1')
@@ -622,7 +632,11 @@ def calculate(period: str, symbol: str) -> None:
                     if sup_cond1:
                         if sup_cond2:
                             # Added
-                            success_fifteen_min += 1
+                            if unsuccess_fifteen_min > 0:
+                                unsuccess_fifteen_min = 0
+                                success_fifteen_min += 1
+                            else:
+                                unsuccess_fifteen_min += 1
                             print(f'success_fifteen_min count: {success_fifteen_min}')
                             print('SUP SUCCESS')
                             print(str(i) + ' success Sup1')
@@ -713,7 +727,11 @@ def calculate(period: str, symbol: str) -> None:
                         if res_cond2:
                             # Added
 
-                            success_one_hr += 1
+                            if unsuccess_one_hr > 0:
+                                unsuccess_one_hr = 0
+                                success_one_hr += 1
+                            else:
+                                unsuccess_one_hr += 1
                             print(f'success_one_hr count: {success_one_hr}')
                             print('RES SUCCESS')
                             print(str(i) + ' success Res1')
@@ -738,7 +756,11 @@ def calculate(period: str, symbol: str) -> None:
                     if sup_cond1:
                         if sup_cond2:
                             # Added
-                            success_one_hr += 1
+                            if unsuccess_one_hr > 0:
+                                unsuccess_one_hr = 0
+                                success_one_hr += 1
+                            else:
+                                unsuccess_one_hr += 1
                             print(f'success_one_hr count: {success_one_hr}')
                             print('SUP SUCCESS')
                             print(str(i) + ' success Sup1')
@@ -829,7 +851,11 @@ def calculate(period: str, symbol: str) -> None:
                         if res_cond2:
                             # Added
 
-                            success_four_hrs += 1
+                            if unsuccess_four_hrs > 0:
+                                unsuccess_four_hrs = 0
+                                success_four_hrs += 1
+                            else:
+                                unsuccess_four_hrs += 1
                             print(f'success_four_hrs count: {success_four_hrs}')
                             print('RES SUCCESS')
                             print(str(i) + ' success Res1')
@@ -854,7 +880,11 @@ def calculate(period: str, symbol: str) -> None:
                     if sup_cond1:
                         if sup_cond2:
                             # Added
-                            success_four_hrs += 1
+                            if unsuccess_four_hrs > 0:
+                                unsuccess_four_hrs = 0
+                                success_four_hrs += 1
+                            else:
+                                unsuccess_four_hrs += 1
                             print(f'success_four_hrs count: {success_four_hrs}')
                             print('SUP SUCCESS')
                             print(str(i) + ' success Sup1')
@@ -945,7 +975,11 @@ def calculate(period: str, symbol: str) -> None:
                         if res_cond2:
                             # Added
 
-                            success_one_day += 1
+                            if unsuccess_one_day > 0:
+                                unsuccess_one_day = 0
+                                success_one_day += 1
+                            else:
+                                unsuccess_one_day += 1
                             print(f'success_one_day count: {success_one_day}')
                             print('RES SUCCESS')
                             print(str(i) + ' success Res1')
@@ -970,7 +1004,11 @@ def calculate(period: str, symbol: str) -> None:
                     if sup_cond1:
                         if sup_cond2:
                             # Added
-                            success_one_day += 1
+                            if unsuccess_one_day > 0:
+                                unsuccess_one_day = 0
+                                success_one_day += 1
+                            else:
+                                unsuccess_one_day += 1
                             print(f'success_one_day count: {success_one_day}')
                             print('SUP SUCCESS')
                             print(str(i) + ' success Sup1')

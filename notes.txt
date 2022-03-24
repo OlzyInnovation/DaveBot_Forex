@@ -1,0 +1,1 @@
+make 'new_function' use the 'param' parameter and also sort based on symbol
