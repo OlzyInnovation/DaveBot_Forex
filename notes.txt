@@ -1,1 +1,48 @@
-make 'new_function' use the 'param' parameter and also sort based on symbol
+
+
+col.update_one({"symbol":"BINANCE_SPOT_MATIC_USDT"}, new_values)
+new_values = {"$set":{"price":"2", "ma":"2"}}
+
+
+1. Modify socket to write to file on recv
+2. Modify 'confirm_period_delay' to read socket file, append latest to file in use and work from file on second render
+3. Add new function(s) ==> 
+        Edit json --- appends to json
+        get_keys(period)
+        s_count, un_count, x_count = search_db(symbol, period)
+        calculate(period, symbol, s_count, un_count, x_count)
+
+
+EXAMPLE:::
+if period == '5MIN' and counter > 0:
+    Edit json --- appends to json
+    get_keys(period)
+    s_count, un_count, x_count = search_db(symbol, period)
+    calculate(period, symbol, s_count, un_count, x_count)
+
+
+
+NOTE
+Counter is currently in 'confirm_period_delay'
+
+
+new_dict = {"symbol": symbol, "fiveMin": f"{fiveMinSuccess}/{fiveMinBlackX}     {calculate_difference(fiveMinPrice, fiveMinMa)}", "fifteenMin": f"{fifteenMinSuccess}/{fifteenMinBlackX}  {calculate_difference(fifteenMinPrice, fifteenMinMa)}", "oneHour": f"{oneHourSuccess}/{oneHourBlackX}    {calculate_difference(oneHourPrice, oneHourMa)}", "fourHour": f"{fourHourSuccess}/{fourHourBlackX}   {calculate_difference(fourHourPrice, fourHourMa)}", "oneDay": f"{oneDaySuccess}/{oneDayBlackX}    {calculate_difference(oneDayPrice, oneDayMa)}"}
+
+
+
+
+
+
+new_dict: dict = {
+      "time_period_start": str(time_period_start),
+      "time_period_end": str(time_period_end),
+      "time_open": str(time_open),
+      "time_close": str(time_close),
+      "price_open": float(price_open),
+      "price_high": float(price_high),
+      "price_low": float(price_low),
+      "price_close": float(price_close),
+      "volume_traded": int(volume_traded),
+      "trades_count": int(trades_count)
+    }
+    f = 
