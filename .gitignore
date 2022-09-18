@@ -29,3 +29,13 @@ files/
 
 notes.*
 keep.*
+BINANCE_SPOT_*
+socket_BINANCE_SPOT_*
+socket_POLONIEX_SPOT_*
+socket_DIGIFINEX_SPOT_*
+socket_HUOBIFTS_PERP_*
+5MIN_*
+15MIN_*
+1HRS_*
+4HRS_*
+1DAY_*

@@ -1,0 +1,5 @@
+rm socket_BINANCE_SPOT_* socket_BITMEX_* socket_DIGIFINEX_* socket_FTX_* socket_FTXUS_* socket_HUOBIFTS_* socket_POLONIEX_*
+rm BINANCE_SPOT_*
+rm 5MIN_* 15MIN_* 1HRS_* 4HRS_* 1DAY_*
+
+Make above into a script for fine tuning milestone
