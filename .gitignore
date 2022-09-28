@@ -34,6 +34,7 @@ socket_BINANCE_SPOT_*
 socket_POLONIEX_SPOT_*
 socket_DIGIFINEX_SPOT_*
 socket_HUOBIFTS_PERP_*
+socket_LOCALTRADE_*
 5MIN_*
 15MIN_*
 1HRS_*

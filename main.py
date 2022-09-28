@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from automation import workbook
 from symbols import symbols
 from periods import periods
+from utils import crazy_calculations, search_data
 
 
 # Calculate time for period time lapse
@@ -76,6 +77,18 @@ one_day_open = []
 one_day_close = []
 one_day_high = []
 one_day_low = []
+
+# Current Times
+five_min_start_current = '08:50:00'
+five_min_end_current = '08:55:00'
+fifteen_min_start_current = ''
+fifteen_min_end_current = ''
+one_hour_start_current = ''
+one_hour_end_current = ''
+four_hour_start_current = ''
+four_hour_end_current = ''
+one_day_start_current = ''
+one_day_end_current = ''
 
 # Sleep Time
 sleep_time = 300
@@ -346,24 +359,54 @@ def create_json(symbol: str, period: str, param: list):
 
 
 def edit_json(symbol: str, period: str):
+    global five_min_start_current
+    global five_min_end_current
+    global fifteen_min_start_current
+    global fifteen_min_end_current
+    global one_hour_start_current
+    global one_hour_end_current
+    global four_hour_start_current
+    global four_hour_end_current
+    global one_day_start_current
+    global one_day_end_current
+    new_data = ''
+
     try:
+        if period == '5MIN':
+            new_data = search_data(
+                symbol, period, five_min_start_current, five_min_end_current)
+        if period == '15MIN':
+            new_data = search_data(
+                symbol, period, fifteen_min_start_current, fifteen_min_end_current)
+        if period == '1HRS':
+            new_data = search_data(
+                symbol, period, one_hour_start_current, one_hour_end_current)
+        if period == '4HRS':
+            new_data = search_data(
+                symbol, period, four_hour_start_current, four_hour_end_current)
+        if period == '1DAY':
+            new_data = search_data(
+                symbol, period, one_day_start_current, one_day_end_current)
+
+        print(f'New Data: {new_data}')
 
         # New
-        f = open(f'socket_{symbol}_{period}.json', 'r+')
-        f_json_data = json.load(f)
-        first_el = f_json_data[0]
-        f.close()
+        # f = open(f'socket_{symbol}_{period}.json', 'r+')
+        # f_json_data = json.load(f)
+        # first_el = f_json_data[0]
+        # f.close()
 
         g = open(f'{symbol}_{period}_data.json', 'r+')
         g_json_data = json.load(g)
-        g_json_data.insert(0, first_el)
+        # g_json_data.insert(0, first_el)
+        g_json_data.insert(0, new_data)
         g.seek(0)
         g.write(str(g_json_data))
         g.truncate()
         g.close()
 
         # Old
-
+        # Edit and replace single quotes with double quotes
         # read input file
         final = open(f'{symbol}_{period}_data.json', "r")
         # read file contents to string
@@ -412,7 +455,7 @@ def reset_timer():
 
 def get_further_price(symbol: str, period: str):
     global price
-    f = open(f'socket_{symbol}_{period}.json', 'r+')
+    f = open(f'{symbol}_{period}_data.json', 'r+')
     f_json_data = json.load(f)
     first_el_price = f_json_data[0]['price_close']
     f.close()
@@ -421,16 +464,28 @@ def get_further_price(symbol: str, period: str):
 
 def further_runs():
     print('Further Runs...')
+    # Timers
     global five_minutes
     global fifteen_minutes
     global one_hour
     global four_hours
     global one_day
+    # Current Times
+    global five_min_start_current
+    global five_min_end_current
+    global fifteen_min_start_current
+    global fifteen_min_end_current
+    global one_hour_start_current
+    global one_hour_end_current
+    global four_hour_start_current
+    global four_hour_end_current
+    global one_day_start_current
+    global one_day_end_current
     for symbol in symbols:
         for period in periods:
             if period == '5MIN' and datetime.now() >= five_minutes:
-                get_further_price(symbol, period)
                 edit_json(symbol, period)
+                get_further_price(symbol, period)
                 get_keys(symbol, period)
                 s_count, un_count, x_count = search_db(symbol, period)
                 calculate(period, symbol, s_count, un_count, x_count)
@@ -611,6 +666,112 @@ def period_api_request(symbol: str, period: str):
     calculate(period, symbol, s_count, un_count, x_count)
 
 
+def set_current_times(symbol: str, period: list):
+    # global periods
+    sorted_start = ''
+    sorted_end = ''
+
+    # Current Times
+    global five_min_start_current
+    global five_min_end_current
+    global fifteen_min_start_current
+    global fifteen_min_end_current
+    global one_hour_start_current
+    global one_hour_end_current
+    global four_hour_start_current
+    global four_hour_end_current
+    global one_day_start_current
+    global one_day_end_current
+
+    f = open(f'{symbol}_{period}_data.json', 'r+')
+    f_json_data = json.load(f)
+
+    time_start = f_json_data[0]['time_period_start']
+    sorted_start = time_start.split('T')[1].split('.')[0]
+
+    time_end = f_json_data[0]['time_period_end']
+    sorted_end = time_end.split('T')[1].split('.')[0]
+
+    if(period == '1DAY'):
+        pass
+    else:
+
+        if(period == '5MIN'):
+            five_min_start_current = sorted_start
+            five_min_end_current = sorted_end
+            print(
+                f'{period} current times set to {five_min_start_current} and {five_min_end_current}')
+        if(period == '15MIN'):
+            fifteen_min_start_current = sorted_start
+            fifteen_min_end_current = sorted_end
+            print(
+                f'{period} current times set to {fifteen_min_start_current} and {fifteen_min_end_current}')
+        if(period == '1HRS'):
+            one_hour_start_current = sorted_start
+            one_hour_end_current = sorted_end
+            print(
+                f'{period} current times set to {one_hour_start_current} and {one_hour_end_current}')
+        if(period == '4HRS'):
+            four_hour_start_current = sorted_start
+            four_hour_end_current = sorted_end
+            print(
+                f'{period} current times set to {four_hour_start_current} and {four_hour_end_current}')
+
+
+def update_current_times():
+    global symbols
+    global five_min_start_current
+    global five_min_end_current
+    global fifteen_min_start_current
+    global fifteen_min_end_current
+    global one_hour_start_current
+    global one_hour_end_current
+    global four_hour_start_current
+    global four_hour_end_current
+    global one_day_start_current
+    global one_day_end_current
+    symbol = symbols[0]
+    for period in periods:
+        f = open(f'{symbol}_{period}_data.json', 'r+')
+        f_json_data = json.load(f)
+        time_start = f_json_data[0]['time_period_start']
+        sorted_start = time_start.split('T')[1].split('.')[0]
+        time_end = f_json_data[0]['time_period_end']
+        sorted_end = time_end.split('T')[1].split('.')[0]
+
+        # print('sorted_start', sorted_start)
+        # print('sorted_start', sorted_end)
+        # sorted_start_update = crazy_calculations(symbol, period)
+        if(period == '5MIN'):
+            five_min_start_current = crazy_calculations(
+                period, five_min_start_current)
+            five_min_end_current = crazy_calculations(
+                period, five_min_end_current)
+            print(
+                f'{period} current times updated to {five_min_start_current} and {five_min_end_current}')
+        if(period == '15MIN'):
+            fifteen_min_start_current = crazy_calculations(
+                period, fifteen_min_start_current)
+            fifteen_min_end_current = crazy_calculations(
+                period, fifteen_min_end_current)
+            print(
+                f'{period} current times updated to {fifteen_min_start_current} and {fifteen_min_end_current}')
+        if(period == '1HRS'):
+            one_hour_start_current = crazy_calculations(
+                period, one_hour_start_current)
+            one_hour_end_current = crazy_calculations(
+                period, one_hour_end_current)
+            print(
+                f'{period} current times updated to {one_hour_start_current} and {one_hour_end_current}')
+        if(period == '4HRS'):
+            four_hour_start_current = crazy_calculations(
+                period, four_hour_start_current)
+            four_hour_end_current = crazy_calculations(
+                period, four_hour_end_current)
+            print(
+                f'{period} current times updated to {four_hour_start_current} and {four_hour_end_current}')
+
+
 def confirm_period_delay():
     print('Confirm delay period here')
     global fifteen_minutes
@@ -619,37 +780,45 @@ def confirm_period_delay():
     global one_day
     global counter
     global sleep_time
+    global periods
 
     print('Counter is currently', counter)
     # try:
-    if counter <= 0:
-        for symbol in symbols:
-            for period in periods:
-                # get_current_price(symbol)
-                if period == '5MIN':
-                    get_current_price(symbol)
-                    period_api_request(symbol, period)
+    # if counter <= 0:
+    #     for symbol in symbols:
+    #         for period in periods:
+    #             # get_current_price(symbol)
+    #             if period == '5MIN':
+    #                 get_current_price(symbol)
+    #                 period_api_request(symbol, period)
 
-                if period == '15MIN' and datetime.now() >= fifteen_minutes:
-                    period_api_request(symbol, period)
+    #             if period == '15MIN' and datetime.now() >= fifteen_minutes:
+    #                 period_api_request(symbol, period)
 
-                if period == '1HRS' and datetime.now() >= one_hour:
-                    period_api_request(symbol, period)
+    #             if period == '1HRS' and datetime.now() >= one_hour:
+    #                 period_api_request(symbol, period)
 
-                if period == '4HRS' and datetime.now() >= four_hours:
-                    period_api_request(symbol, period)
+    #             if period == '4HRS' and datetime.now() >= four_hours:
+    #                 period_api_request(symbol, period)
 
-                if period == '1DAY' and datetime.now() >= one_day:
-                    period_api_request(symbol, period)
+    #             if period == '1DAY' and datetime.now() >= one_day:
+    #                 period_api_request(symbol, period)
 
-    elif counter > 0:
-        further_runs()
+    # elif counter > 0:
 
-    counter = 1
-    print('Counter is currently', counter)
+    #     further_runs()
+    #     update_current_times()
+
+    # counter = 1
+    # print('Counter is currently', counter)
+    # print('Sleeping...')
+    # time.sleep(sleep_time)
+    # print('Awake...')
+    # confirm_period_delay()
     print('Sleeping...')
     time.sleep(sleep_time)
-    print('Awake...')
+    further_runs()
+    update_current_times()
     confirm_period_delay()
     # except Exception:
     #     print('Confirm Period Delay Exception')
@@ -659,15 +828,22 @@ def confirm_period_delay():
 
 # GET latest data for each given period
 def get_periods() -> None:
+    global counter
+    print(f'Counter is currently {counter}')
     print('Get Periods here')
     try:
-        create_db()
-        for symbol in symbols:
-            for period in periods:
-                get_current_price(symbol)
-                period_api_request(symbol, period)
+        if counter <= 0:
+            create_db()
+            for symbol in symbols:
+                for period in periods:
+                    get_current_price(symbol)
+                    period_api_request(symbol, period)
+                    set_current_times(symbol, period)
 
-        confirm_period_delay()
+            counter = 1
+            confirm_period_delay()
+        else:
+            confirm_period_delay()
 
     except Exception:
         print('Get Periods Exception')
@@ -1498,3 +1674,6 @@ def calculate(period: str, symbol: str, success_count: int, unsuccess_count: int
 
 if __name__ == '__main__':
     get_periods()
+    # update_current_times()
+    # print(symbols[0])
+    # edit_json('BINANCE_SPOT_ETH_USDT', '5MIN')

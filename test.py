@@ -64,7 +64,6 @@ def sort_data(symbol: str, period: str):
     sorted_period_end_second = sorted_period_end.split(':')[-1]
 
     sorted_period_end_day = time_period_end.split('T')[0].split('-')[-1]
-    
 
     print(f'Sorted Open: {sorted_open}')
     print(f'Sorted Open Second: {sorted_open_second}')
@@ -105,4 +104,105 @@ def sort_data(symbol: str, period: str):
     '''
 
 
-sort_data('BINANCE_SPOT_ADA_USDT', '5MIN')
+def search_data(symbol: str, period: str):
+    f = open(f'socket_{symbol}_{period}.json', 'r+')
+    f_json_data = json.load(f)
+    # time_open = f_json_data[0]['time_open']
+    # time_close = f_json_data[0]['time_close']
+    # time_period_start = f_json_data[0]['time_period_start']
+    # time_period_end = f_json_data[0]['time_period_end']
+    # f.close()
+    counter = 0
+    for data in f_json_data:
+        # print(len(data))
+        # print(data['time_open'])
+        # print(data)
+        time_open = data['time_open']
+        sorted_open = time_open.split('T')[1].split('.')[0]
+
+        print('Time Open:  {}'.format(time_open))
+        print('Sorted Open:  {}'.format(sorted_open))
+        if (sorted_open == '08:50:00'):
+            print('Found 6:15')
+            print('Counter is {}'.format(counter))
+            # print(f_json_data[counter])
+            return f_json_data[counter]
+
+        counter += 1
+
+    # print(len(f_json_data))
+    # pass
+
+
+def set_current_times():
+    pass
+
+
+def check_zeros(number_to_check: int) -> str:
+    stringified = str(number_to_check)
+    try:
+        if stringified[0] and stringified[1]:
+            return stringified
+    except IndexError:
+        return '0' + stringified
+
+
+def crazy_calculations(period: str, value: str):
+    # f = open(f'socket_{symbol}_{period}.json', 'r+')
+    # f_json_data = json.load(f)
+
+    # time_open = f_json_data[0]['time_open']
+    # sorted_open = time_open.split('T')[1].split('.')[0]
+
+    # print('Sorted Open is: ', sorted_open)
+    # print(type(sorted_open))
+    join_splits = ''
+    hour_split = int(value.split(':')[0])
+    minute_split = int(value.split(':')[1])
+    second_split = value.split(':')[-1]
+    print('Minute Split is: ', hour_split)
+    print('Minute Split is: ', minute_split)
+    print('Second Split is: ', second_split)
+    if(period == '5MIN'):
+        if (hour_split == 23 and minute_split == 55):
+            hour_split = 0
+            minute_split = 0
+        elif (minute_split == 55):
+            hour_split += 1
+            minute_split = 0
+        else:
+            minute_split += 5
+
+    elif(period == '15MIN'):
+        if (hour_split == 23 and minute_split == 45):
+            hour_split = 0
+            minute_split = 0
+        elif (minute_split == 45):
+            hour_split += 1
+            minute_split = 0
+        else:
+            minute_split += 15
+    elif(period == '1HRS'):
+        if (hour_split == 23):
+            hour_split = 0
+        else:
+            hour_split += 1
+    elif(period == '4HRS'):
+        if (hour_split == 20):
+            hour_split = 0
+        else:
+            hour_split += 4
+
+    join_splits = check_zeros(hour_split) + \
+        ':' + check_zeros(minute_split) + ':' + second_split
+    # call update_current_time function here instead
+    print('Join SPlits: ', join_splits)
+    return join_splits
+
+    # Remember to check for hour start numbers for zeros & more
+
+
+# sort_data('BINANCE_SPOT_ADA_USDT', '5MIN')
+print(search_data('BINANCE_SPOT_ETH_USDT', '5MIN'))
+crazy_calculations('BINANCE_SPOT_BTC_USDT', '15MIN')
+print(check_zeros(0))
