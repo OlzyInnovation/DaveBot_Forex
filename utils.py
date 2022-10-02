@@ -28,10 +28,6 @@ def search_data(symbol: str, period: str, current_start_time: str, current_end_t
         counter += 1
 
 
-def update_current_times():
-    pass
-
-
 def check_zeros(number_to_check: int) -> str:
     stringified = str(number_to_check)
     try:
@@ -42,6 +38,9 @@ def check_zeros(number_to_check: int) -> str:
 
 
 def crazy_calculations(period: str, value: str):
+    print('Calculations for update Here...')
+    print(f'Period gotten {period}')
+    print(f'Value gotten {value}')
     join_splits = ''
     hour_split = int(value.split(':')[0])
     minute_split = int(value.split(':')[1])
