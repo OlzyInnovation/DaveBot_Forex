@@ -33,6 +33,7 @@ class CoinAPIv1_subscribe(object):
 
 
 def sort_data(msg: dict):
+
     period_id = msg['period_id']
     time_period_start = msg['time_period_start']
     time_period_end = msg['time_period_end']
@@ -82,16 +83,22 @@ def sort_data(msg: dict):
         "volume_traded": volume_traded,
         "trades_count": trades_count
     }
+    # print(f'New Dict: {new_dict}')
 
-    if period_id == "5MIN" and (int(sorted_close_minute) - int(sorted_open_minute) >= 4) and (int(sorted_close_second) - int(sorted_open_second) >= 54):
+    if period_id == "5MIN" and (int(sorted_close_minute) - int(sorted_open_minute) >= 4) and (int(sorted_close_second) - int(sorted_open_second) >= 20):
+        print('Data Found: ', new_dict)
         append_data(symbol_id, period_id, new_dict)
-    if period_id == "15MIN" and (int(sorted_close_minute) - int(sorted_open_minute) >= 14) and (int(sorted_close_second) - int(sorted_open_second) >= 54):
+    if period_id == "15MIN" and (int(sorted_close_minute) - int(sorted_open_minute) >= 14) and (int(sorted_close_second) - int(sorted_open_second) >= 20):
+        print('Data Found: ', new_dict)
         append_data(symbol_id, period_id, new_dict)
-    if period_id == "1HRS" and (int(sorted_close_hour) == int(sorted_period_end_hour)) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 54):
+    if period_id == "1HRS" and (int(sorted_period_end_hour) - int(sorted_close_hour) == 1) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 20):
+        print('Data Found: ', new_dict)
         append_data(symbol_id, period_id, new_dict)
-    if period_id == "4HRS" and (int(sorted_close_hour) == int(sorted_period_end_hour)) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 54):
+    if period_id == "4HRS" and (int(sorted_period_end_hour) - int(sorted_close_hour) == 4) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 20):
+        print('Data Found: ', new_dict)
         append_data(symbol_id, period_id, new_dict)
-    if period_id == "1DAY" and (int(sorted_period_end_day) == int(sorted_close_day)) and (int(sorted_close_hour) == int(sorted_period_end_hour)) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 54):
+    if period_id == "1DAY" and (int(sorted_period_end_day) - int(sorted_close_day) == 1) and (int(sorted_close_hour) == int(sorted_period_end_hour)) and (int(sorted_close_minute) - int(sorted_open_minute) == 59) and (int(sorted_close_second) - int(sorted_open_second) >= 20):
+        print('Data Found: ', new_dict)
         append_data(symbol_id, period_id, new_dict)
     else:
         print('No data appended!')
@@ -162,4 +169,5 @@ ws.send(json.dumps(sub.__dict__))
 
 while True:
     msg = json.loads(ws.recv())
+    print(f'Msg: {msg}')
     sort_data(msg)

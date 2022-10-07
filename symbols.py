@@ -2,3 +2,5 @@
 #                       'BINANCE_SPOT_ADA_USDT', 'BINANCE_SPOT_SOL_USDT', 'BINANCE_SPOT_CRV_USDT', 'BINANCE_SPOT_BTC_USDT']
 symbols: list[str] = ['BINANCE_SPOT_BTC_USDT', 'BINANCE_SPOT_ETH_USDT']
 # symbols: list[str] = ['BINANCE_SPOT_ETH_USDT']
+
+# symbols: list[str] = ['BINANCE_SPOT_CRV_USDT']

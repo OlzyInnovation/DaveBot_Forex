@@ -7,7 +7,7 @@ from pymongo import MongoClient
 # from automation import workbook
 from symbols import symbols
 from periods import periods
-from utils import crazy_calculations, search_data
+from utils import crazy_calculations, search_data, days_months_years
 
 
 # Calculate time for period time lapse
@@ -89,9 +89,15 @@ four_hour_start_current = ''
 four_hour_end_current = ''
 one_day_start_current = ''
 one_day_end_current = ''
+day_track_start = ''
+day_track_end = ''
+month_track_start = ''
+month_track_end = ''
+year_track_start = ''
+year_track_end = ''
 
 # Sleep Time
-sleep_time = 3
+sleep_time = 300
 
 # API_KEY
 api_key = 'B82F729F-DD09-4A7D-B7D9-9E3C60C4CF0D'
@@ -687,7 +693,7 @@ def period_api_request(symbol: str, period: str):
     calculate(period, symbol, s_count, un_count, x_count)
 
 
-def set_current_times(symbol: str, period: list):
+def set_current_times(symbol: str, period: str):
     # global periods
     # sorted_start = ''
     # sorted_end = ''
@@ -703,6 +709,12 @@ def set_current_times(symbol: str, period: list):
     global four_hour_end_current
     global one_day_start_current
     global one_day_end_current
+    global day_track_start
+    global day_track_end
+    global month_track_start
+    global month_track_end
+    global year_track_start
+    global year_track_end
 
     f = open(f'{symbol}_{period}_data.json', 'r+')
     f_json_data = json.load(f)
@@ -713,30 +725,49 @@ def set_current_times(symbol: str, period: list):
     time_end = f_json_data[0]['time_period_end']
     sorted_end = time_end.split('T')[1].split('.')[0]
 
+    if(period == '5MIN'):
+        five_min_start_current = sorted_start
+        five_min_end_current = sorted_end
+        print(
+            f'{period} current times set to {five_min_start_current} and {five_min_end_current}')
+    if(period == '15MIN'):
+        fifteen_min_start_current = sorted_start
+        fifteen_min_end_current = sorted_end
+        print(
+            f'{period} current times set to {fifteen_min_start_current} and {fifteen_min_end_current}')
+    if(period == '1HRS'):
+        one_hour_start_current = sorted_start
+        one_hour_end_current = sorted_end
+        print(
+            f'{period} current times set to {one_hour_start_current} and {one_hour_end_current}')
+    if(period == '4HRS'):
+        four_hour_start_current = sorted_start
+        four_hour_end_current = sorted_end
+        print(
+            f'{period} current times set to {four_hour_start_current} and {four_hour_end_current}')
     if(period == '1DAY'):
-        pass
-    else:
-
-        if(period == '5MIN'):
-            five_min_start_current = sorted_start
-            five_min_end_current = sorted_end
-            print(
-                f'{period} current times set to {five_min_start_current} and {five_min_end_current}')
-        if(period == '15MIN'):
-            fifteen_min_start_current = sorted_start
-            fifteen_min_end_current = sorted_end
-            print(
-                f'{period} current times set to {fifteen_min_start_current} and {fifteen_min_end_current}')
-        if(period == '1HRS'):
-            one_hour_start_current = sorted_start
-            one_hour_end_current = sorted_end
-            print(
-                f'{period} current times set to {one_hour_start_current} and {one_hour_end_current}')
-        if(period == '4HRS'):
-            four_hour_start_current = sorted_start
-            four_hour_end_current = sorted_end
-            print(
-                f'{period} current times set to {four_hour_start_current} and {four_hour_end_current}')
+        sorted_day_start = time_start.split('T')[0].split('-')[-1]
+        sorted_day_end = time_end.split('T')[0].split('-')[-1]
+        sorted_month_start = time_start.split('T')[0].split('-')[1]
+        sorted_month_end = time_end.split('T')[0].split('-')[1]
+        sorted_year_start = time_start.split('T')[0].split('-')[0]
+        sorted_year_end = time_end.split('T')[0].split('-')[0]
+        day_track_start = sorted_day_start
+        day_track_end = sorted_day_end
+        one_day_start_current = sorted_start
+        one_day_end_current = sorted_end
+        month_track_start = sorted_month_start
+        month_track_end = sorted_month_end
+        year_track_start = sorted_year_start
+        year_track_end = sorted_year_end
+        print(
+            f'{period} current times set to {one_day_start_current} and {one_day_end_current}')
+        print(
+            f'{period} day track dates set to {day_track_start} and {day_track_end}')
+        print(
+            f'{period} month track dates set to {month_track_start} and {month_track_end}')
+        print(
+            f'{period} year track dates set to {year_track_start} and {year_track_end}')
 
 
 def update_current_times(period: str):
@@ -751,6 +782,13 @@ def update_current_times(period: str):
     global four_hour_end_current
     global one_day_start_current
     global one_day_end_current
+    global day_track_start
+    global day_track_end
+    global month_track_start
+    global month_track_end
+    global year_track_start
+    global year_track_end
+    leap_months = [4, 6, 9, 11]
 
     if(period == '5MIN'):
         five_min_start_current = crazy_calculations(
@@ -782,6 +820,32 @@ def update_current_times(period: str):
             period, four_hour_end_current)
         print(
             f'{period} current times updated to {four_hour_start_current} and {four_hour_end_current}')
+    if(period == '1DAY'):
+        pass
+        one_day_start_current = crazy_calculations(
+            period, one_day_start_current)
+        one_day_end_current = crazy_calculations(
+            period, one_day_end_current)
+
+        # OTHERS GO HERE
+        if (month_track_start in leap_months and day_track_start == 30):
+            day_track_end = '01'
+        day_track_start = days_months_years(day_track_start)
+        day_track_end = days_months_years(day_track_end)
+
+        # day_track_start = days_months_years(day_track_start, 'month')
+        # day_track_end = days_months_years(day_track_end, 'month')
+
+        # day_track_start = days_months_years(day_track_start, 'day')
+        # day_track_end = days_months_years(day_track_end, 'day')
+        print(
+            f'{period} current times updated to {one_day_start_current} and {one_day_end_current}')
+        print(
+            f'{period} day track dates updated to {day_track_start} and {day_track_end}')
+        print(
+            f'{period} month track dates updated to {month_track_start} and {month_track_end}')
+        print(
+            f'{period} year track dates updated to {year_track_start} and {year_track_end}')
 
 
 def confirm_period_delay():
