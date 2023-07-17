@@ -100,7 +100,7 @@ year_track_end = ''
 sleep_time = 300
 
 # API_KEY
-api_key = 'B82F729F-DD09-4A7D-B7D9-9E3C60C4CF0D'
+api_key = ''  # api Key
 
 client = MongoClient()
 

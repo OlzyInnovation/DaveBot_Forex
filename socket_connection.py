@@ -5,7 +5,7 @@ from symbols import symbols
 from periods import periods
 
 
-api_key = "123655DD-2A99-4772-84F4-C7692BB7682B"
+api_key = ""  # api Key
 # self.subscribe_filter_symbol_id = ['BINANCE_SPOT_MATIC_USDT','BINANCE_SPOT_LUNA_USDT', 'BINANCE_SPOT_ETH_USDT', 'BINANCE_SPOT_ADA_USDT', 'BINANCE_SPOT_SOL_USDT', 'BINANCE_SPOT_CRV_USDT','BINANCE_SPOT_BTC_USDT' ]
 
 
